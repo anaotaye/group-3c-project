@@ -82,3 +82,51 @@ export const createExpense = (req, res) => {
     data: expenseWithId,
   });
 };
+
+
+let expenses = [{
+  id: 1,
+  amount: 50,
+  category: "Food",
+  date: "2026-04-27",
+  description: "Lunch",
+  createdAtDate: "2026-04-27T09:30:00Z",
+  updatedAtDate: "2026-04-27T09:30:00Z"
+}
+]; // In-memory storage
+
+// Update expense (PUT /expenses/:id)
+exports.updateExpense = (req, res) => {
+  const { id } = req.params;
+  const { amount, category, date, description } = req.body;
+
+  const expense = expenses.find(exp => exp.id === parseInt(id));
+
+  if (!expense) {
+    return res.status(404).json({ error: "Expense not found" });
+  }
+
+  // Partial update: only update provided fields
+  if (amount !== undefined) expense.amount = amount;
+  if (category !== undefined) expense.category = category;
+  if (date !== undefined) expense.date = date;
+  if (description !== undefined) expense.description = description;
+
+  // Update timestamp
+  expense.updatedAtDate = new Date().toISOString();
+
+  res.json({ message: "Expense updated successfully", expense });
+};
+
+// Delete expense (DELETE /expenses/:id)
+exports.deleteExpense = (req, res) => {
+  const { id } = req.params;
+  const index = expenses.findIndex(exp => exp.id === parseInt(id));
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Expense not found" });
+  }
+
+  const deletedExpense = expenses.splice(index, 1);
+  res.json({ message: "Expense deleted successfully", deletedExpense });
+};
