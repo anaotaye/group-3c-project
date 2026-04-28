@@ -14,3 +14,15 @@ router.get("/", getExpenses);
 router.post("/", createExpense);
 
 export default router;
+
+
+const express = require("express");
+const router = express.Router();
+const expenseController = require("../controllers/expenseController");
+
+router.put("/expenses/:id", expenseController.updateExpense);
+router.delete("/expenses/:id", expenseController.deleteExpense);
+router.get("/expenses", expenseController.getExpenses);
+router.get("/expenses/summary", expenseController.getSummary);
+
+module.exports = router;
