@@ -82,3 +82,91 @@ export const createExpense = (req, res) => {
     data: expenseWithId,
   });
 };
+
+// Update expense (PUT /expenses/:id)
+export const updateExpense = (req, res) => {
+  const { id } = req.params;
+  const { amount, category, description } = req.body;
+
+  const expense = expensesData.expenses.find(exp => exp.id === parseInt(id));
+
+  if (!expense) {
+    return res.status(404).json({ 
+      success: false,
+      error: "Expense not found" 
+    });
+  }
+
+  // Validate the updated expense data
+  const updatedExpense = {
+    description: description !== undefined ? description : expense.description,
+    amount: amount !== undefined ? amount : expense.amount,
+    category: category !== undefined ? category : expense.category,
+  };
+
+  const errors = validateExpense(updatedExpense);
+  if (errors.length > 0) {
+    return res.status(400).json({
+      success: false,
+      errors,
+    });
+  }
+
+  // Apply updates
+  if (amount !== undefined) expense.amount = amount;
+  if (category !== undefined) expense.category = category;
+  if (description !== undefined) expense.description = description;
+
+  // Update timestamp
+  expense.updatedAtDate = new Date().toISOString();
+
+  res.status(200).json({ 
+    success: true,
+    message: "Expense updated successfully", 
+    data: expense 
+  });
+};
+
+// Delete expense (DELETE /expenses/:id)
+export const deleteExpense = (req, res) => {
+  const { id } = req.params;
+  const index = expensesData.expenses.findIndex(exp => exp.id === parseInt(id));
+
+  if (index === -1) {
+    return res.status(404).json({ 
+      success: false,
+      error: "Expense not found" 
+    });
+  }
+
+  const deletedExpense = expensesData.expenses.splice(index, 1);
+  res.status(200).json({ 
+    success: true,
+    message: "Expense deleted successfully", 
+    data: deletedExpense[0]
+  });
+};
+
+// GET expense summary
+export const getSummary = (req, res) => {
+  const expenses = expensesData.expenses;
+  
+  const summary = {
+    totalExpenses: expenses.length,
+    totalAmount: expenses.reduce((sum, exp) => sum + exp.amount, 0),
+    byCategory: {},
+  };
+
+  // Group by category
+  expenses.forEach(exp => {
+    if (!summary.byCategory[exp.category]) {
+      summary.byCategory[exp.category] = 0;
+    }
+    summary.byCategory[exp.category] += exp.amount;
+  });
+
+  res.status(200).json({
+    success: true,
+    data: summary,
+  });
+};
