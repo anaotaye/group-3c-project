@@ -1,4 +1,3 @@
-// define API endpoints for expenses
 import express from "express";
 import {
   getExpenses,
@@ -13,16 +12,16 @@ const router = express.Router();
 // GET all expenses
 router.get("/", getExpenses);
 
+// GET summary (put before /:id routes)
+router.get("/summary", getSummary);
+
 // POST a new expense
 router.post("/", createExpense);
 
 // PUT to update an expense
-router.put("/expenses/:id", updateExpense);
+router.put("/:id", updateExpense);
 
 // DELETE an expense
-router.delete("/expenses/:id", deleteExpense);
-
-// GET expenses summary
-router.get("/expenses/summary", getSummary);
+router.delete("/:id", deleteExpense);
 
 export default router;
