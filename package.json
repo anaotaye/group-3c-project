@@ -11,9 +11,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "This is a REST API built using Node.js and Express.js to manage expenses.",
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anaotaye/group-3c-project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anaotaye/group-3c-project/issues"
+  },
+  "homepage": "https://github.com/anaotaye/group-3c-project#readme"
 }
