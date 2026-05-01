@@ -35,6 +35,7 @@ const validateExpense = (expense) => {
 
 // GET all expenses
 export const getExpenses = (req, res) => {
+  console.log(req);
   res.status(200).json({
     success: true,
     data: expensesData.expenses,
@@ -88,12 +89,12 @@ export const updateExpense = (req, res) => {
   const { id } = req.params;
   const { amount, category, description } = req.body;
 
-  const expense = expensesData.expenses.find(exp => exp.id === parseInt(id));
+  const expense = expensesData.expenses.find((exp) => exp.id === parseInt(id));
 
   if (!expense) {
-    return res.status(404).json({ 
+    return res.status(404).json({
       success: false,
-      error: "Expense not found" 
+      error: "Expense not found",
     });
   }
 
@@ -120,37 +121,39 @@ export const updateExpense = (req, res) => {
   // Update timestamp
   expense.updatedAtDate = new Date().toISOString();
 
-  res.status(200).json({ 
+  res.status(200).json({
     success: true,
-    message: "Expense updated successfully", 
-    data: expense 
+    message: "Expense updated successfully",
+    data: expense,
   });
 };
 
 // Delete expense (DELETE /expenses/:id)
 export const deleteExpense = (req, res) => {
   const { id } = req.params;
-  const index = expensesData.expenses.findIndex(exp => exp.id === parseInt(id));
+  const index = expensesData.expenses.findIndex(
+    (exp) => exp.id === parseInt(id),
+  );
 
   if (index === -1) {
-    return res.status(404).json({ 
+    return res.status(404).json({
       success: false,
-      error: "Expense not found" 
+      error: "Expense not found",
     });
   }
 
   const deletedExpense = expensesData.expenses.splice(index, 1);
-  res.status(200).json({ 
+  res.status(200).json({
     success: true,
-    message: "Expense deleted successfully", 
-    data: deletedExpense[0]
+    message: "Expense deleted successfully",
+    data: deletedExpense[0],
   });
 };
 
 // GET expense summary
 export const getSummary = (req, res) => {
   const expenses = expensesData.expenses;
-  
+
   const summary = {
     totalExpenses: expenses.length,
     totalAmount: expenses.reduce((sum, exp) => sum + exp.amount, 0),
@@ -158,7 +161,7 @@ export const getSummary = (req, res) => {
   };
 
   // Group by category
-  expenses.forEach(exp => {
+  expenses.forEach((exp) => {
     if (!summary.byCategory[exp.category]) {
       summary.byCategory[exp.category] = 0;
     }
