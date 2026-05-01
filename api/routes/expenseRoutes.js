@@ -19,9 +19,12 @@ router.get("/summary", getSummary);
 router.post("/", createExpense);
 
 // PUT to update an expense
-router.put("/:id", updateExpense);
+router.put("/expenses/:id", updateExpense);
 
 // DELETE an expense
-router.delete("/:id", deleteExpense);
+router.delete("/expenses/:id", deleteExpense);
+
+// GET expenses summary
+router.get("/expenses/summary", getSummary);
 
 export default router;
